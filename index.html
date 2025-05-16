@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Email MIME Parser - Java Library</title>
+    <title>blueglacier.tech</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -17,6 +17,7 @@
             --code-bg: #e9ecef;
             --code-text: #bd4147;
             --header-height: 60px;
+            --main-header-bg: #0056b3; /* Darker blue for blueglacier.tech header */
         }
 
         body {
@@ -26,122 +27,126 @@
             line-height: 1.6;
             color: var(--text-color);
             background-color: var(--light-bg);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
 
-        header {
-            background-color: var(--dark-bg);
+        /* Main blueglacier.tech header */
+        .main-header {
+            background-color: var(--main-header-bg);
             color: var(--light-text-color);
             padding: 15px 0;
+            text-align: center;
             box-shadow: 0 2px 5px rgba(0,0,0,0.2);
             position: sticky;
             top: 0;
             z-index: 1000;
         }
 
-        header .container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        header h1 {
+        .main-header h1 {
             margin: 0;
-            font-size: 1.8em;
-            color: var(--primary-color);
-        }
-
-        nav ul {
-            list-style: none;
-            margin: 0;
-            padding: 0;
-            display: flex;
-        }
-
-        nav ul li {
-            margin-left: 20px;
-        }
-
-        nav ul li a {
+            font-size: 2.5em;
             color: var(--light-text-color);
-            text-decoration: none;
-            font-weight: 400;
-            transition: color 0.3s ease;
-        }
-
-        nav ul li a:hover {
-            color: var(--primary-color);
         }
 
         .container {
             max-width: 1000px;
             margin: 0 auto;
             padding: 20px;
+            flex-grow: 1; /* Allows content to push footer down */
         }
 
-        section {
-            padding: 40px 0;
+        /* --- Tab Styles --- */
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 20px;
+            overflow-x: auto; /* For responsive tabs */
+            -webkit-overflow-scrolling: touch; /* For smoother scrolling on touch devices */
+        }
+
+        .tab-button {
+            background-color: var(--light-bg);
+            border: 1px solid var(--border-color);
+            border-bottom: none;
+            padding: 12px 20px;
+            cursor: pointer;
+            font-weight: bold;
+            color: var(--secondary-color);
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            white-space: nowrap; /* Prevent tab names from wrapping */
+            margin-right: 2px; /* Small space between tabs */
+        }
+
+        .tab-button:hover {
+            background-color: #e2e6ea;
+            color: var(--primary-color);
+        }
+
+        .tab-button.active {
+            background-color: white;
+            color: var(--primary-color);
+            border-color: var(--primary-color);
+            border-bottom: 1px solid white; /* Overlap border for active tab */
+            position: relative;
+            top: 1px;
+            z-index: 1;
+        }
+
+        .tab-content {
+            display: none;
+            padding: 20px 0;
+            background-color: white;
+            border: 1px solid var(--border-color);
+            border-top: none;
+            border-radius: 0 0 8px 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* --- Nested styles for the Email MIME Parser content (adapted from previous) --- */
+        .tab-content > section {
+            padding: 20px 0; /* Adjust padding for nested sections */
             border-bottom: 1px solid var(--border-color);
         }
-
-        section:last-of-type {
+        .tab-content > section:last-of-type {
             border-bottom: none;
         }
-
-        h2 {
+        .tab-content h2 {
             color: var(--primary-color);
-            font-size: 2em;
-            margin-bottom: 20px;
-            border-bottom: 2px solid var(--primary-color);
-            padding-bottom: 10px;
-            display: inline-block;
-        }
-
-        p {
+            font-size: 1.8em; /* Slightly smaller for nested content */
             margin-bottom: 15px;
-        }
-
-        .call-to-action {
-            text-align: center;
-            padding: 50px 0;
-            background-color: var(--primary-color);
-            color: var(--light-text-color);
-        }
-
-        .call-to-action h2 {
-            color: var(--light-text-color);
-            border-bottom-color: var(--light-text-color);
-        }
-
-        .btn {
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 8px;
             display: inline-block;
-            background-color: var(--dark-bg);
-            color: var(--light-text-color);
-            padding: 12px 25px;
-            text-decoration: none;
-            border-radius: 5px;
-            transition: background-color 0.3s ease;
-            font-weight: 700;
         }
-
-        .btn:hover {
-            background-color: #495057;
+        .tab-content .call-to-action {
+            padding: 30px 0; /* Adjust padding */
         }
-
-        pre {
+        .tab-content pre {
             background-color: var(--code-bg);
             border: 1px solid var(--border-color);
             padding: 15px;
             border-radius: 5px;
             overflow-x: auto;
-            white-space: pre-wrap; /* Allows long lines to wrap */
-            word-wrap: break-word; /* For older browsers */
+            white-space: pre-wrap;
+            word-wrap: break-word;
         }
-
-        code {
-            font-family: 'Fira Code', 'Roboto Mono', monospace; /* Fira Code is good if available */
+        .tab-content code {
+            font-family: 'Fira Code', 'Roboto Mono', monospace;
             color: var(--code-text);
             font-size: 0.9em;
         }
+        .tab-content header, .tab-content footer {
+            display: none; /* Hide original header/footer of embedded content */
+        }
+
 
         footer {
             background-color: var(--dark-bg);
@@ -149,86 +154,84 @@
             text-align: center;
             padding: 20px 0;
             font-size: 0.9em;
+            margin-top: auto; /* Pushes footer to the bottom */
         }
 
-        /* Responsive adjustments */
-        @media (max-width: 768px) {
-            header .container {
-                flex-direction: column;
-                text-align: center;
-            }
-
-            nav ul {
-                margin-top: 15px;
-                flex-direction: column;
-            }
-
-            nav ul li {
-                margin: 5px 0;
+        /* Responsive adjustments for tabs */
+        @media (max-width: 600px) {
+            .tab-button {
+                padding: 10px 15px;
+                font-size: 0.9em;
             }
         }
     </style>
 </head>
 <body>
-<header>
+<header class="main-header">
     <div class="container">
-        <h1>Email MIME Parser</h1>
-        <nav>
-            <ul>
-                <li><a href="#overview">Overview</a></li>
-                <li><a href="#features">Features</a></li>
-                <li><a href="#installation">Installation</a></li>
-                <li><a href="#usage">Usage</a></li>
-                <li><a href="#contributing">Contributing</a></li>
-                <li><a href="https://github.com/ram-sharma-6453/email-mime-parser" target="_blank">GitHub</a></li>
-            </ul>
-        </nav>
+        <h1>blueglacier.tech</h1>
     </div>
 </header>
 
-<main>
-    <section id="overview" class="container">
-        <h2>Overview</h2>
-        <p>The <strong>Email MIME Parser</strong> is a robust and efficient **Java library** designed for parsing complex email messages encoded in MIME (Multipurpose Internet Mail Extensions) format. It provides a straightforward API to extract various parts of an email, including text content, HTML content, attachments, and intricate header information.</p>
-        <p>Whether you're building an email client, an archival system, or an analytics tool, this library simplifies the often challenging task of decoding and understanding email structures.</p>
-    </section>
+<main class="container">
+    <div class="tabs">
+        <button class="tab-button active" onclick="openTab(event, 'home')">Home</button>
+        <button class="tab-button" onclick="openTab(event, 'email-parser')">Email MIME Parser</button>
+        <button class="tab-button" onclick="openTab(event, 'about')">About</button>
+    </div>
 
-    <section id="features" class="container">
-        <h2>Features</h2>
-        <ul>
-            <li><strong>Comprehensive MIME Parsing:</strong> Handles multi-part messages, including mixed, alternative, related, and digest types.</li>
-            <li><strong>Content Extraction:</strong> Easily retrieve plain text and HTML body parts.</li>
-            <li><strong>Attachment Handling:</strong> Identify and extract file attachments with their original filenames and content types.</li>
-            <li><strong>Header Parsing:</strong> Access all email headers (e.g., From, To, Subject, Date, Content-Type, Content-Transfer-Encoding) in a structured manner.</li>
-            <li><strong>Character Encoding Support:</strong> Decodes various character sets commonly found in email.</li>
-            <li><strong>Robust Error Handling:</strong> Designed to gracefully handle malformed or non-standard MIME messages.</li>
-            <li><strong>Pure Java:</strong> Written entirely in Java, ensuring cross-platform compatibility and ease of integration into Java projects.</li>
-        </ul>
-    </section>
+    <div id="home" class="tab-content active">
+        <h2>Welcome to blueglacier.tech!</h2>
+        <p>This is the home tab of blueglacier.tech. Here you can find various projects, insights, and resources related to software development, technology, and more.</p>
+        <p>Navigate through the tabs above to explore different sections and tools.</p>
+        <h3>Our Mission</h3>
+        <p>To provide high-quality, open-source solutions and share knowledge to empower developers and tech enthusiasts alike.</p>
+        <p>Stay tuned for more updates and exciting projects!</p>
+    </div>
 
-    <section id="installation" class="container">
-        <h2>Installation</h2>
-        <p>You can add the Email MIME Parser to your Java project using Maven or Gradle.</p>
+    <div id="email-parser" class="tab-content">
+        <section id="overview">
+            <h2>Overview</h2>
+            <p>The <strong>Email MIME Parser</strong> is a robust and efficient **Java library** designed for parsing complex email messages encoded in MIME (Multipurpose Internet Mail Extensions) format. It provides a straightforward API to extract various parts of an email, including text content, HTML content, attachments, and intricate header information.</p>
+            <p>Whether you're building an email client, an archival system, or an analytics tool, this library simplifies the often challenging task of decoding and understanding email structures.</p>
+        </section>
 
-        <h3>Maven</h3>
-        <p>Add the following dependency to your <code>pom.xml</code>:</p>
-        <pre><code class="language-xml">&lt;dependency&gt;
+        <section id="features">
+            <h2>Features</h2>
+            <ul>
+                <li><strong>Comprehensive MIME Parsing:</strong> Handles multi-part messages, including mixed, alternative, related, and digest types.</li>
+                <li><strong>Content Extraction:</strong> Easily retrieve plain text and HTML body parts.</li>
+                <li><strong>Attachment Handling:</strong> Identify and extract file attachments with their original filenames and content types.</li>
+                <li><strong>Header Parsing:</strong> Access all email headers (e.g., From, To, Subject, Date, Content-Type, Content-Transfer-Encoding) in a structured manner.</li>
+                <li><strong>Character Encoding Support:</strong> Decodes various character sets commonly found in email.</li>
+                <li><strong>Robust Error Handling:</strong> Designed to gracefully handle malformed or non-standard MIME messages.</li>
+                <li><strong>Pure Java:</strong> Written entirely in Java, ensuring cross-platform compatibility and ease of integration into Java projects.</li>
+            </ul>
+        </section>
+
+        <section id="installation">
+            <h2>Installation</h2>
+            <p>You can add the Email MIME Parser to your Java project using Maven or Gradle.</p>
+
+            <h3>Maven</h3>
+            <p>Add the following dependency to your <code>pom.xml</code>:</p>
+            <pre><code class="language-xml">&lt;dependency&gt;
     &lt;groupId&gt;com.yourorganization.emailparser&lt;/groupId&gt; &lt;!-- Replace with actual GroupId --&gt;
     &lt;artifactId&gt;email-mime-parser&lt;/artifactId&gt;
     &lt;version&gt;1.0.0&lt;/version&gt; &lt;!-- Replace with the latest version --&gt;
 &lt;/dependency&gt;</code></pre>
 
-        <h3>Gradle</h3>
-        <p>Add the following to your <code>build.gradle</code> file:</p>
-        <pre><code class="language-gradle">implementation 'com.yourorganization.emailparser:email-mime-parser:1.0.0' // Replace with actual GroupId and latest version</code></pre>
+            <h3>Gradle</h3>
+            <p>Add the following to your <code>build.gradle</code> file:</p>
+            <pre><code class="language-gradle">implementation 'com.yourorganization.emailparser:email-mime-parser:1.0.0' // Replace with actual GroupId and latest version</code></pre>
 
-        <p>Alternatively, you can <a href="https://github.com/ram-sharma-6453/email-mime-parser/releases" target="_blank">download the JAR directly</a> from the GitHub releases page (if available) and add it to your project's classpath.</p>
-    </section>
+            <p>Alternatively, you can <a href="https://github.com/ram-sharma-6453/email-mime-parser/releases" target="_blank">download the JAR directly</a> from the GitHub releases page (if available) and add it to your project's classpath.</p>
+        </section>
 
-    <section id="usage" class="container">
-        <h2>Usage</h2>
-        <p>Here's a quick example to get started with parsing an email message:</p>
-        <pre><code class="language-java">import com.yourorganization.emailparser.EmailParser; // Adjust package name
+        <section id="usage">
+            <h2>Usage</h2>
+            <p>Here's a quick example to get started with parsing an email message:</p>
+            <pre><code class="language-java">import com.yourorganization.emailparser.EmailParser; // Adjust package name
 import com.yourorganization.emailparser.ParsedEmail; // Adjust package name
 import com.yourorganization.emailparser.Attachment;  // Adjust package name
 
@@ -311,57 +314,85 @@ public class EmailParsingExample {
     }
 }
 </code></pre>
-        <p>For more detailed examples and advanced usage, please refer to the <a href="https://github.com/ram-sharma-6453/email-mime-parser" target="_blank">GitHub repository</a>.</p>
-    </section>
+            <p>For more detailed examples and advanced usage, please refer to the <a href="https://github.com/ram-sharma-6453/email-mime-parser" target="_blank">GitHub repository</a>.</p>
+        </section>
 
-    <section id="contributing" class="container">
-        <h2>Contributing</h2>
-        <p>Contributions are welcome! If you have suggestions, bug reports, or want to contribute code, please check the <a href="https://github.com/ram-sharma-6453/email-mime-parser/blob/main/CONTRIBUTING.md" target="_blank">CONTRIBUTING.md</a> file (if it exists) on the GitHub repository for guidelines.</p>
-        <p>You can also open an issue or pull request directly on GitHub.</p>
-    </section>
+        <section id="contributing">
+            <h2>Contributing</h2>
+            <p>Contributions are welcome! If you have suggestions, bug reports, or want to contribute code, please check the <a href="https://github.com/ram-sharma-6453/email-mime-parser/blob/main/CONTRIBUTING.md" target="_blank">CONTRIBUTING.md</a> file (if it exists) on the GitHub repository for guidelines.</p>
+            <p>You can also open an issue or pull request directly on GitHub.</p>
+        </section>
 
-    <div class="call-to-action">
-        <h2>Ready to Simplify Email Parsing?</h2>
-        <p>Get started with the Email MIME Parser today!</p>
-        <a href="https://github.com/ram-sharma-6453/email-mime-parser" target="_blank" class="btn">View on GitHub</a>
+        <div class="call-to-action">
+            <h2>Ready to Simplify Email Parsing?</h2>
+            <p>Get started with the Email MIME Parser today!</p>
+            <a href="https://github.com/ram-sharma-6453/email-mime-parser" target="_blank" class="btn">View on GitHub</a>
+        </div>
+    </div>
+
+    <div id="about" class="tab-content">
+        <h2>About BlueGlacier.tech</h2>
+        <p>BlueGlacier.tech is dedicated to creating innovative open-source solutions and sharing valuable technical knowledge. We believe in the power of community and collaboration to build better software.</p>
+        <p>Our focus areas include:</p>
+        <ul>
+            <li>Backend Development (Java, Go)</li>
+            <li>Cloud Technologies (Kubernetes, Docker)</li>
+            <li>Data Engineering</li>
+            <li>Software Architecture</li>
+        </ul>
+        <p>Feel free to reach out or connect with us on GitHub!</p>
     </div>
 </main>
 
 <footer>
     <div class="container">
-        <p>&copy; 2025 Ram Sharma. All rights reserved. | <a href="https://github.com/ram-sharma-6453/email-mime-parser" target="_blank" style="color: var(--primary-color);">GitHub Repository</a></p>
+        <p>&copy; 2025 blueglacier.tech. All rights reserved.</p>
     </div>
 </footer>
 
 <script>
-    // Smooth scrolling for navigation links
-    document.querySelectorAll('nav a').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
-            e.preventDefault();
-            document.querySelector(this.getAttribute('href')).scrollIntoView({
-                behavior: 'smooth'
-            });
-        });
+    // Function to open specific tab content
+    function openTab(evt, tabId) {
+        // Get all tab content elements and hide them
+        var tabContents = document.getElementsByClassName("tab-content");
+        for (var i = 0; i < tabContents.length; i++) {
+            tabContents[i].style.display = "none";
+            tabContents[i].classList.remove('active'); // Remove active class
+        }
+
+        // Get all tab buttons and remove the "active" class
+        var tabButtons = document.getElementsByClassName("tab-button");
+        for (var i = 0; i < tabButtons.length; i++) {
+            tabButtons[i].classList.remove("active");
+        }
+
+        // Show the current tab, and add an "active" class to the button that opened the tab
+        document.getElementById(tabId).style.display = "block";
+        document.getElementById(tabId).classList.add('active'); // Add active class to content
+        evt.currentTarget.classList.add("active");
+    }
+
+    // --- Initial Tab Load ---
+    // Open the "Home" tab by default when the page loads
+    document.addEventListener('DOMContentLoaded', (event) => {
+        document.querySelector('.tab-button.active').click(); // Simulate click on the default active tab
     });
 
-    // Add a class to header on scroll for visual effect (optional)
-    window.addEventListener('scroll', function() {
-        const header = document.querySelector('header');
-        if (window.scrollY > 50) {
-            header.classList.add('scrolled');
-        } else {
-            header.classList.remove('scrolled');
-        }
-    });
-    // Add a bit more style for the scrolled class
-    const style = document.createElement('style');
-    style.innerHTML = `
-            header.scrolled {
-                background-color: rgba(52, 58, 64, 0.95); /* Slightly transparent */
-                box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    // Optional: Smooth scrolling for nested section links within tabs
+    document.querySelectorAll('.tab-content a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            const targetId = this.getAttribute('href');
+            const targetElement = document.querySelector(targetId);
+            if (targetElement) {
+                e.preventDefault();
+                // Get the scroll container, which is the body/window for this layout
+                window.scrollTo({
+                    top: targetElement.offsetTop - document.querySelector('.main-header').offsetHeight - document.querySelector('.tabs').offsetHeight - 20, // Adjust for fixed header and tab bar
+                    behavior: 'smooth'
+                });
             }
-        `;
-    document.head.appendChild(style);
+        });
+    });
 </script>
 </body>
 </html>
